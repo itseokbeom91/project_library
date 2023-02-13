@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.example.mapper.RecommendWishMapper">
+
+
+	<!-- 추천 중복 확인 -->
+	<select id="recommendDupCheck" resultType="int">
+		SELECT COUNT(*) FROM recommend_wish
+		WHERE member_id = #{memberId}
+		AND book_num = #{bookNum}
+		AND recommend = 'ok'
+	</select>
+	
+	<!-- 찜하기 중복 확인 -->
+	<select id="wishDupCheck" resultType="int">
+		SELECT COUNT(*) FROM recommend_wish
+		WHERE member_id = #{memberId}
+		AND book_num = #{bookNum}
+		AND wish = 'ok'
+	</select>
+	
+	<!-- 추천, 찜하기 -->
+	<insert id="recommendWish">
+		INSERT INTO recommend_wish (member_id, book_num, recommend, wish) 
+		VALUES (#{memberId}, #{bookNum}, #{recommend}, #{wish}) 
+	</insert>
+	
+	<!-- 찜한 도서 추천하기 -->
+	<update id="updateRecommend">
+		UPDATE recommend_wish
+		SET recommend = 'ok'
+		WHERE member_id = #{memberId}
+		AND book_num = #{bookNum}
+	</update>
+	
+	<!-- 추천한 도서 찜하기 -->
+	<update id="updateWish">
+		UPDATE recommend_wish
+		SET wish = 'ok'
+		WHERE member_id = #{memberId}
+		AND book_num = #{bookNum}
+	</update>
+	
+	<!-- 찜한 개수 구하기 -->
+	<select id="getCountWishById" resultType="int">
+		SELECT COUNT(*) FROM recommend_wish
+		WHERE member_id = #{memberId}
+		AND wish = 'ok'
+	</select>
+	
+	<!-- 찜한 리스트 가져오기 -->
+	<select id="getWishList" resultType="bookVo">
+		SELECT * FROM book
+		WHERE num in (
+			SELECT book_num from recommend_wish
+			WHERE member_id = #{memberId}
+			AND wish = 'ok')
+	</select>
+	
+	<!-- 추천, 찜하기 삭제하기 -->
+	<delete id="deleteRecommendWish">
+		DELETE FROM recommend_wish
+		WHERE member_id = #{memberId}
+		AND book_num = #{bookNum}
+	</delete>
+	
+	<!-- 찜한 도서 있을 때 추천 취소하기 -->
+	<update id="cancleRecommend">
+		UPDATE recommend_wish
+		SET recommend = null
+		WHERE member_id = #{memberId}
+		AND book_num = #{bookNum}
+	</update>
+	
+	<!-- 찜한 도서 있을 때 추천 취소하기 -->
+	<update id="cancleWish">
+		UPDATE recommend_wish
+		SET wish = null
+		WHERE member_id = #{memberId}
+		AND book_num = #{bookNum}
+	</update>
+	
+</mapper>

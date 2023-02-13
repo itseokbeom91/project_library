@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.example.mapper.TotalBorrowMapper">
+
+	<!-- 해당 도서 대출이력확인 -->
+	<select id="totalBorrowDupCheck" resultType="int">
+		SELECT COUNT(*) FROM total_borrow
+		WHERE member_id = #{memberId}
+		AND book_num = #{bookNum}
+	</select>
+
+	<!-- 대출이력에 추가하기 -->
+	<insert id="insertTotalBorrow">
+		INSERT INTO total_borrow (member_id, book_num) 
+		VALUES (#{memberId}, #{bookNum}) 
+	</insert>
+	
+	<!-- 대출이력 개수 -->
+	<select id="getCountTotalBorrow" resultType="int">
+		SELECT COUNT(*) FROM total_borrow
+		WHERE member_id = #{memberId}
+	</select>
+	
+	<!-- 대출이력 리스트 -->
+	<select id="getTotalBorrowList" resultType="bookVo">
+		SELECT * FROM book
+		WHERE num in (
+			SELECT book_num from total_borrow
+			WHERE member_id = #{memberId})
+		ORDER BY num DESC 
+		LIMIT #{startRow}, #{pageSize} 
+	</select>
+	
+</mapper>

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.example.mapper.BorrowMapper">
+
+	<resultMap type="BorrowVo" id="borrowVo">
+		<result column="member_id" property="memberId"/>
+		<result column="book_num" property="bookNum"/>
+		<result column="borrow_date" property="borrowDate"/>
+		<result column="over_date" property="overDate"/>
+	</resultMap>
+	
+	<resultMap type="AlarmVo" id="alarmVo">
+		<result column="member_id" property="memberId"/>
+		<result column="book_num" property="bookNum"/>
+		<result column="reg_date" property="regDate"/>
+	</resultMap>
+	
+	<resultMap type="BookVo" id="bookVo">
+		<result column="num" property="num"/>
+		<result column="sort" property="sort"/>
+		<result column="cover" property="cover"/>
+		<result column="publisher" property="publisher"/>
+		<result column="birth" property="birth"/>
+		<result column="book_name" property="bookName"/>
+		<result column="writer" property="writer"/>
+		<result column="introduce_writer" property="introduceWriter"/>
+		<result column="introduce_book" property="introduceBook"/>
+		<result column="neck_kick" property="neckKick"/>
+		<result column="borrow_count" property="borrowCount"/>
+		<result column="reserve_count" property="reserveCount"/>
+		<result column="total_borrow" property="totalBorrow"/>
+		<result column="recommend_count" property="recommendCount"/>
+		<collection property="borrowVo" resultMap="borrowVo"/>
+		<collection property="alarmVo" resultMap="alarmVo"/>
+	</resultMap>
+	
+
+	<!-- 해당 도서 대출확인 -->
+	<select id="borrowDupCheck" resultType="int">
+		SELECT COUNT(*) FROM borrow
+		WHERE member_id = #{memberId}
+		AND book_num = #{bookNum}
+	</select>
+
+	<!-- 대출하기 -->
+	<insert id="borrowBook">
+		INSERT INTO borrow (member_id, book_num, borrow_date, over_date) 
+		VALUES (#{memberId}, #{bookNum}, #{borrowDate}, #{overDate}) 
+	</insert>
+	
+	<!-- 대출 권수 -->
+	<select id="getCountBorrowById" resultType="int">
+		SELECT COUNT(*) FROM borrow
+		WHERE member_id = #{memberId}
+	</select>
+	
+	<!-- 대출 리스트 -->
+	<select id="getBorrowListById" parameterType="BookVo" resultMap="bookVo">
+		SELECT book.*, borrow.borrow_date, borrow.over_date FROM book JOIN borrow
+		WHERE book.num = borrow.book_num
+		AND borrow.member_id = #{memberId}
+	</select>
+	
+	<!-- 반납하기 -->
+	<delete id="delelteBorrow">
+		DELETE FROM borrow
+		WHERE member_id = #{memberId}
+		AND book_num = #{bookNum}
+	</delete>
+	
+	<!-- 한 아이디전체 반납하기 -->
+	<delete id="deleteAll">
+		DELETE FROM borrow
+		WHERE member_id = #{memberId}
+	</delete>
+	
+	<!-- 예약도서를 대출로 전환 -->
+	<insert id="changeReserveToBorrow">
+		INSERT INTO borrow ( member_id, book_num )
+		SELECT member_id, book_num FROM reserve
+		WHERE book_num = #{bookNum}
+		ORDER BY num ASC
+		LIMIT 1;
+	</insert>
+	
+	<!-- 예약에서 넘어온 도서 반납 날짜 등록 -->
+	<update id="updateDate">
+		UPDATE borrow
+		SET borrow_date = #{borrowDate},
+		over_date = #{overDate}
+		WHERE book_num = #{bookNum}
+		ORDER BY num DESC
+		LIMIT 1;
+	</update>
+	
+	<!-- 예약할 때 해당 도서 젤 처음 반납예정 일 구하기 -->
+	<select id="expectBorrowDate" resultType="String">
+		SELECT over_date FROM borrow
+		WHERE book_num = #{bookNum}
+		ORDER BY over_date
+		LIMIT 1;
+	</select>
+	
+	
+	
+	
+	
+	<!-- 대출로 전환된 도서 알람테이블에 가져오기 -->
+	<insert id="insertAlarm">
+		INSERT INTO alarm ( member_id, book_num, reg_date )
+		SELECT member_id, book_num, borrow_date FROM borrow
+		WHERE book_num = #{bookNum}
+		ORDER BY num DESC
+		LIMIT 1;
+	</insert>
+	
+	<!-- 알람 권수 -->
+	<select id="getCountAlarm" resultType="int">
+		SELECT COUNT(*) FROM alarm
+		WHERE member_id = #{memberId}
+	</select>
+	
+	<!-- 예약알람 리스트 -->
+	<select id="getAlarmList" parameterType="BookVo" resultMap="bookVo">
+		SELECT book.*, alarm.reg_date FROM book JOIN alarm
+		WHERE book.num = alarm.book_num
+		AND alarm.member_id = #{memberId}
+	</select>
+	
+	<!-- 예약 취소하기 -->
+	<delete id="deleteAlarm">
+		DELETE FROM alarm
+		WHERE member_id = #{memberId}
+		AND book_num = #{bookNum}
+	</delete>
+	
+	
+	
+	
+	<!-- 2주 지났는지 확인 -->
+	<select id="isOverBorrow" resultType="borrowVo">
+		SELECT member_id, book_num FROM borrow
+		WHERE over_date &lt; now();
+		
+	</select>
+	
+	
+	<!-- 2주 지난 대출 도서 자동 반납 -->
+<!-- 	<delete id="testDelete" parameterType="java.util.List"> -->
+<!-- 		DELETE FROM borrow WHERE -->
+<!-- 		<foreach collection="list" item="item" open="" close="" separator="OR"> -->
+<!-- 		(member_id = #{item.memberId} -->
+<!-- 		AND book_num = #{item.bookNum}) -->
+<!-- 		</foreach> -->
+<!-- 	</delete> -->
+	
+</mapper>

@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.example.mapper.BookMapper">
+
+	<!-- 	도서 등록하기 -->
+	<insert id="insertBook">
+		INSERT INTO book (cover, sort, publisher, birth, book_name, writer, introduce_writer, introduce_book, neck_kick, borrow_count, reserve_count, total_borrow, recommend_count) 
+		VALUES (#{cover}, #{sort}, #{publisher}, #{birth}, #{bookName}, #{writer}, #{introduceWriter}, #{introduceBook}, #{neckKick}, #{borrowCount}, #{reserveCount}, #{totalBorrow}, #{recommendCount}) 
+	</insert>
+
+	<!-- 	개수 구하기 -->
+	<select id="getCountBySearch" resultType="int">
+		SELECT COUNT(*) FROM book 
+		<if test="category == 'publisher'">
+			WHERE publisher LIKE CONCAT('%', #{search}, '%') 
+		</if>
+		<if test="category == 'bookName'">
+			WHERE book_name LIKE CONCAT('%', #{search}, '%') 
+		</if>
+		<if test="category == 'writer'">
+			WHERE writer LIKE CONCAT('%', #{search}, '%') 
+		</if>
+		<if test="category == 'sort'">
+			WHERE sort LIKE CONCAT('%', #{search}, '%') 
+		</if>
+	</select>
+	
+	
+	<!-- 	검색 리스트 가져오기 -->
+	<select id="getListBySearch" resultType="bookVo">
+		SELECT * FROM book 
+		<if test="category == 'publisher'">
+			WHERE publisher LIKE CONCAT('%', #{search}, '%') 
+		</if>
+		<if test="category == 'bookName'">
+			WHERE book_name LIKE CONCAT('%', #{search}, '%') 
+		</if>
+		<if test="category == 'writer'">
+			WHERE writer LIKE CONCAT('%', #{search}, '%') 
+		</if>
+		<if test="category == 'sort'">
+			WHERE sort LIKE CONCAT('%', #{search}, '%') 
+		</if>
+		ORDER BY num DESC 
+		LIMIT #{startRow}, #{pageSize} 
+	</select>
+	
+	
+	<!-- 	대출 카온트 1 추가하기 -->
+	<update id="addBorrowCount">
+		UPDATE book 
+		SET borrow_count = borrow_count + 1 
+		WHERE num = #{num} 
+	</update>
+	
+	<!-- 대출 카운트 1 감소하기 -->
+	<update id="subBorrowCount">
+		UPDATE book 
+		SET borrow_count = borrow_count - 1 
+		WHERE num = #{num} 
+	</update>
+	
+	<!-- 	누적대출 카온트 1 추가하기 -->
+	<update id="addTotalBorrow">
+		UPDATE book 
+		SET total_borrow = total_borrow + 1 
+		WHERE num = #{num} 
+	</update>
+	
+	<!-- 	예약 카온트 1 추가하기 -->
+	<update id="addReserveCount">
+		UPDATE book 
+		SET reserve_count = reserve_count + 1 
+		WHERE num = #{num} 
+	</update>
+	
+	<!-- 	예약 카온트 1 감소하기 -->
+	<update id="subReserveCount">
+		UPDATE book 
+		SET reserve_count = reserve_count - 1 
+		WHERE num = #{num} 
+	</update>
+	
+	<!-- 	추천 카운트 1 추가하기 -->
+	<update id="addRecommendCount">
+		UPDATE book 
+		SET recommend_count = recommend_count + 1 
+		WHERE num = #{num} 
+	</update>
+	
+	<!-- 	추천 카운트 1 감소하기 -->
+	<update id="subRecommendCount">
+		UPDATE book 
+		SET recommend_count = recommend_count - 1 
+		WHERE num = #{num} 
+	</update>
+	
+	<!-- 신간 권수 가져오기 -->
+	<select id="getCountByNewBooks" resultType="int">
+		SELECT COUNT(*) FROM book
+		WHERE SUBSTR(birth, 6, 2) = #{strThisMonth}
+		AND SUBSTR(birth, 1, 4) = #{strThisYear}
+		OR SUBSTR(birth, 6, 2) = #{strLastMonth}
+		AND SUBSTR(birth, 1, 4) = #{strLatMothYear}
+	</select>
+	
+	<!-- 신간 리스트 가져오기 -->
+	<select id="getListByNewBooks" resultType="bookVo">
+		SELECT * FROM book
+		WHERE SUBSTR(birth, 6, 2) = #{strThisMonth}
+		AND SUBSTR(birth, 1, 4) = #{strThisYear}
+		UNION
+		SELECT * FROM book
+		WHERE SUBSTR(birth, 6, 2) = #{strLastMonth}
+		AND SUBSTR(birth, 1, 4) = #{strLatMothYear}
+		ORDER BY birth DESC
+		LIMIT #{startRow}, #{pageSize} 
+	</select>
+	
+	<!-- 베스트 책 가져오기 -->
+	<select id="getBestBooks" resultType="bookVo">
+		SELECT * FROM book
+		ORDER BY total_borrow DESC, recommend_count DESC
+		LIMIT #{startRow}, #{pageSize}
+	</select>
+	
+	<select id="getRecommendBooks" resultType="bookVo">
+		SELECT * FROM book
+		ORDER BY recommend_count DESC
+		LIMIT #{startRow}, #{pageSize}
+	</select>
+	
+	<select id="getNewBooks" resultType="bookVo">
+		SELECT * FROM book
+		ORDER BY birth DESC
+		LIMIT #{startRow}, #{pageSize}
+	</select>
+	
+
+</mapper>

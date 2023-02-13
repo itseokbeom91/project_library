@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.example.mapper.ReserveMapper">
+
+	<resultMap type="ReserveVo" id="reserveVo">
+		<result column="member_id" property="memberId"/>
+		<result column="book_num" property="bookNum"/>
+		<result column="reserve_date" property="reserveDate"/>
+		<result column="over_date" property="overDate"/>
+	</resultMap>
+	
+	<resultMap type="BookVo" id="bookVo">
+		<result column="num" property="num"/>
+		<result column="sort" property="sort"/>
+		<result column="cover" property="cover"/>
+		<result column="publisher" property="publisher"/>
+		<result column="birth" property="birth"/>
+		<result column="book_name" property="bookName"/>
+		<result column="writer" property="writer"/>
+		<result column="introduce_writer" property="introduceWriter"/>
+		<result column="introduce_book" property="introduceBook"/>
+		<result column="neck_kick" property="neckKick"/>
+		<result column="borrow_count" property="borrowCount"/>
+		<result column="reserve_count" property="reserveCount"/>
+		<result column="total_borrow" property="totalBorrow"/>
+		<result column="recommend_count" property="recommendCount"/>
+		<collection property="reserveVo" resultMap="reserveVo"/>
+	</resultMap>
+	
+	<!-- 해당 도서 예약확인 -->
+	<select id="reserveDupCheck" resultType="int">
+		SELECT COUNT(*) FROM reserve
+		WHERE member_id = #{memberId}
+		AND book_num = #{bookNum}
+	</select>
+
+	<!-- 예약하기 -->
+	<insert id="reserveBook">
+		INSERT INTO reserve (member_id, book_num, reserve_date, over_date) 
+		VALUES (#{memberId}, #{bookNum}, #{reserveDate}, #{overDate}) 
+	</insert>
+	
+	<!-- 예약 권수 -->
+	<select id="getCountReserveById" resultType="int">
+		SELECT COUNT(*) FROM reserve
+		WHERE member_id = #{memberId}
+	</select>
+	
+	<!-- 예약한 책 번호 -->
+	<select id="getReserveListById" parameterType="BookVo" resultMap="bookVo">
+		SELECT book.*, reserve.reserve_date, reserve.over_date FROM book JOIN reserve
+		WHERE book.num = reserve.book_num
+		AND reserve.member_id = #{memberId}
+	</select>
+	
+	<!-- 예약중인 도서 확인 -->
+	<select id="getCountReserveByBookNum" resultType="int">
+		SELECT COUNT(*) FROM reserve
+		WHERE book_num = #{bookNum}
+	</select>
+	
+	<!-- 대툴로 올릴 때 예약테이블에서 삭제 -->
+	<delete id="delelteReserve">
+		DELETE FROM reserve
+		WHERE book_num = #{bookNum}
+		ORDER BY num ASC
+		LIMIT 1
+	</delete>
+	
+	<!-- 예약 취소하기 -->
+	<delete id="cancleReserve">
+		DELETE FROM reserve
+		WHERE member_id = #{memberId}
+		AND book_num = #{bookNum}
+	</delete>
+
+</mapper>
