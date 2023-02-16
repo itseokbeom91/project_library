@@ -159,7 +159,7 @@ margin: 0px 0 10px 0;
 display: flex;
 
 }
-#main_ul{
+.main_ul{
 display: flex;
 justify-content: space-between;
 border:solid 1px #d4d5d6;
@@ -169,7 +169,7 @@ margin: 0px 0 10px 0;
     
 }
 
-#main_ul h5{
+.main_ul h5{
 text-align: center;
 color: #666;
 }
@@ -296,7 +296,7 @@ color: #267AC2;
 	<div class="main_list_title"><p>베스트 도서</p><a href="/book/bestBooks">더보기 <i class="fas fa-angle-right"></i></a></div>
 	<div id="main_best">
 	
-			<ul id="main_ul">
+			<ul class="main_ul">
 			<li class="prev"><a href="/"><i class="fas fa-angle-left" style="font-size: 50px; margin-top:30px; color: #ccc;"></i></a></li>
 			<c:choose>
 				<c:when test="${ not empty bestBookList }">
@@ -320,7 +320,7 @@ color: #267AC2;
 	<div class="main_list_title"><p>신착 도서</p><a href="/book/newBooks">더보기 <i class="fas fa-angle-right"></i></a></div>
 	<div id="main_new">
 	
-			<ul id="main_ul">
+			<ul class="main_ul">
 			<li class="prev"><a href="/"><i class="fas fa-angle-left" style="font-size: 50px; margin-top:30px;  color: #ccc;"></i></a></li>
 			<c:choose>
 				<c:when test="${ not empty newList }">

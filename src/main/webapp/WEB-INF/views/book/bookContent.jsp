@@ -119,7 +119,7 @@ display: flex;
 
 
 
-#addReview{
+.addReview{
 	font-size: var(--font-regular);
 	text-align:center;
 	width: 130px;
@@ -130,7 +130,7 @@ display: flex;
 	color:white;
 	border: 2px solid #267AC2;
 }
-#addReview:disabled {
+.addReview:disabled {
 	font-size: var(--font-regular);
 	text-align:center;
 	width: 130px;
@@ -294,7 +294,7 @@ display: none;
 								</c:otherwise>
 							</c:choose>
 							<br>
-							<li><button type="button" v-on:click="addReview" id="addReview" v-bind:disabled="inputReview == '' || inputReview.length > 100 || ${ empty id }">등록</button>
+							<li><button type="button" v-on:click="addReview" class="addReview" v-bind:disabled="inputReview == '' || inputReview.length > 100 || ${ empty id }">등록</button>
 							<small style="margin-left: 12px;">{{ remain }} / 100</small></li>
 							</ul>
 							<br>
@@ -330,7 +330,7 @@ display: none;
 										<ul class="content_review">
 										<li><textarea v-model="inputModifyReview" rows="5" cols="80" class="form-control" placeholder="수정 내용을 입력하세요."
 												  	style="resize: none;" border= "solid 1px #ebebeb" background-color="#f8f8f8"></textarea></li>
-										<li><button type="button" id="addReview" v-on:click="modifyReview(index)" v-bind:disabled="inputModifyReview == '' || inputModifyReview.length > 100 || ${ empty id }">수정</button>
+										<li><button type="button" class="addReview" v-on:click="modifyReview(index)" v-bind:disabled="inputModifyReview == '' || inputModifyReview.length > 100 || ${ empty id }">수정</button>
 											<small class="text-muted" style="margin-left: 20px;">{{ modifyRemain }} / 100</small></li>
 										</ul>
 									</div>

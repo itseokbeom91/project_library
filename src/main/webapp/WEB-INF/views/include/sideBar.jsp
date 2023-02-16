@@ -26,6 +26,7 @@
 	
 	<c:otherwise>
 		<form action="/member/login" method="post" id="sideBar_login">
+			<!-- input type="hidden" name="keepLogin" value="true" --> <!-- 로그인 유지 -->
 		
 			<ul class = "ul_main_login">
 				<ul>
