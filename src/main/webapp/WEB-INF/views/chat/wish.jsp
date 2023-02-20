@@ -64,7 +64,7 @@ font-weight: lighter;
 	display:flex;
 	height:50px;
 	justify-content: center;
-	/* /* background-color: #267AC2; */ */
+	/* /* background-color: #267AC2; */
 	margin:auto;
 	padding-top: 15px;
 	width:100%;
@@ -122,7 +122,7 @@ div#chatbox {
 	<h3>
 	<div style= "border:1px solid lightgray; padding:15px;">
 	<ul style="display: flex; justify-content: space-between;">
-		<li><span style="font-weight:bold;">희망도서신청</span></li>
+		<li><span style="font-weight:bold;">희망도서신청(채팅)</span></li>
 			<%-- 로그인 했을때만 [글쓰기] 버튼 보이기 --%>
 		<c:if test="${ not empty sessionScope.id }">
 			<li><input type="button" value="신청하기" class="btn" style=" border-radius:0px; margin:0 10px 0 0; height: 29px; width: 80px;" onclick="location.href='/chat/new'"></li>
@@ -140,7 +140,7 @@ div#chatbox {
 	<label for="tab2">공지사항</label>
 
 	<input id="tab3" type="radio" name="tabs" checked>
-	<label for="tab3">희망도서신청</label>
+	<label for="tab3">희망도서신청(채팅)</label>
 	
 
 	<section id="content1">
@@ -181,7 +181,7 @@ div#chatbox {
 				</c:when>		
 				<c:otherwise>
 					<tr>
-						<td colspan="2">희망도서 없음</td>
+						<td colspan="2">채팅방 없음</td>
 					</tr>
 				</c:otherwise>
 				</c:choose>

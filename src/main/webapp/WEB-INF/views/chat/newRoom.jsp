@@ -98,29 +98,29 @@ div#chatbox {
 		
 	<div id="bookContent_sy" style="margin-bottom: 40px; text-align: center;" >	
 		<form action="/chat/new" method="post" name="frm">
-		<input type="hidden" name="pageNum" value="${ pageNum }">
-		<input type="hidden" name="id" value="${ id }">
-		<table id="notice">
-		
-			<tr>
-				<th scope="col" class="twrite">작성자</th>
-				<td class="left" width="500">
-					${ id }
-				</td>
-			</tr>
-			<tr>
-				<th scope="col" class="ttitle">방 제목</th>
-				<td class="left" >
-					<textarea style="resize: none"  rows="5" cols="110" name="title" class="text-area" required></textarea>
-				</td>
-			</tr>
-		</table>
-	
-		<div id="modi_btns_1">
-			<p><input type="button" value="칸맞추기" class="btn1" style="visibility: hidden;"></p>
-			<p><input type="submit" value="채팅방 생성" class="btn1"></p>
-			<p><input type="button" value="목록보기" class="btn1" onclick="location.href='/chat/list'"></p>
-		</div>
+			<input type="hidden" name="pageNum" value="${ pageNum }">
+			<input type="hidden" name="id" value="${ id }">
+			<table id="notice">
+
+				<tr>
+					<th scope="col" class="twrite">작성자</th>
+					<td class="left" width="500">
+						${ id }
+					</td>
+				</tr>
+				<tr>
+					<th scope="col" class="ttitle">방 제목</th>
+					<td class="left" >
+						<textarea style="resize: none"  rows="5" cols="110" name="title" class="text-area" required></textarea>
+					</td>
+				</tr>
+			</table>
+
+			<div id="modi_btns_1">
+				<p><input type="button" value="칸맞추기" class="btn1" style="visibility: hidden;"></p>
+				<p><input type="submit" value="채팅방 생성" class="btn1"></p>
+				<p><input type="button" value="목록보기" class="btn1" onclick="location.href='/chat/list'"></p>
+			</div>
 
 		</form>
 	</div>

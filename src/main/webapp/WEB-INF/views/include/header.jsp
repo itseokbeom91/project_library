@@ -44,7 +44,7 @@
 			<li><a href="/book/list">전자책</a></li>
 			<li><a href="/board/notice">알고싶어요</a></li>
 			<li><a href="/board/announce/notice">공지사항</a></li>
-			<li><a href="/chat/list">희망도서신청</a></li>
+			<li><a href="/chat/list">희망도서신청(채팅)</a></li>
 		</ul>
 		
         <a href="#" class="navbar_toogleBtn">
