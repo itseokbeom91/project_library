@@ -267,7 +267,7 @@ color: #267AC2;
 	    </div>
 	</div>
 
-	<div class="main_list_title"><p>추천 도서</p></div>
+	<div class="main_list_title"><p>추천 도서</p><a href="/test">studyTest</a></div>
 	<div id="main_recommend">
 
 	<div class="bookImg_recommend">
@@ -453,8 +453,44 @@ color: #267AC2;
 	    
 	
 	/*==========================================================  */
-	
-	
+
+
+	function solution(s, skip, index) {
+		var answer = '';
+
+		var alphabet = 'abcdefghijklmnopqrstuvwxyz';
+		var replaceAlphabet = '';
+
+		for(var i=0;i<skip.length;i++){
+			//console.log(skip.charAt(i));
+			alphabet = alphabet.replace(skip.charAt(i), '');
+		}
+		console.log(alphabet);
+
+		for(var j=0;j<s.length;j++){
+			//console.log(alphabet.indexOf(s.charAt(j)));
+			var wordIndex = alphabet.indexOf(s.charAt(j))+index;
+			if(wordIndex >= alphabet.length){
+				if(wordIndex >= (alphabet.length)*2){
+					answer += alphabet.charAt(wordIndex-wordIndex-alphabet.length);
+				}else{
+					answer += alphabet.charAt(wordIndex-alphabet.length);
+				}
+				console.log(wordIndex, alphabet.length);
+
+				//console.log(alphabet.charAt(wordIndex-alphabet.length));
+			}else{
+				answer += alphabet.charAt(wordIndex);
+				//console.log(alphabet.charAt(wordIndex));
+			}
+
+		}
+		console.log(answer);
+		//return alphabet;
+	}
+	$(document).ready(function(){
+		solution('aukks','wbqd',5)
+	})
 	
 	
 
